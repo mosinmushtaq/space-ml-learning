@@ -1,0 +1,472 @@
+import { useState } from "react";
+
+const roadmap = [
+  {
+    phase: "SEMESTER 3 (Weeks 1-16)",
+    icon: "🔥",
+    color: "#4F9CF9",
+    duration: "4 months",
+    goal: "Python Foundation + First Project",
+    topics: [
+      {
+        week: "W1-2",
+        topic: "Git & GitHub Setup",
+        priority: "CRITICAL",
+        why: "Recruiters see your code FIRST. No GitHub = invisible.",
+        learn: ["Git basics", "GitHub account", "repo structure", "README writing"],
+        time: "7 days",
+        outcome: "Public GitHub profile with 3+ repos"
+      },
+      {
+        week: "W3-6",
+        topic: "NumPy & Pandas (Deep Mastery)",
+        priority: "CRITICAL",
+        why: "Foundation for ALL satellite ML work. Must be solid.",
+        learn: ["Arrays, broadcasting, operations", "DataFrames, indexing, filtering", "Aggregation, groupby", "Real data manipulation"],
+        time: "4 weeks",
+        outcome: "Can manipulate satellite metadata + process tabular data fluently"
+      },
+      {
+        week: "W7-8",
+        topic: "Visualization (Matplotlib, Seaborn)",
+        priority: "IMPORTANT",
+        why: "Communicate findings to non-technical people. Required for reports.",
+        learn: ["Basic plots", "Multi-panel visualization", "Satellite imagery display"],
+        time: "2 weeks",
+        outcome: "Can visualize data professionally"
+      },
+      {
+        week: "W9-14",
+        topic: "Math for ML (Linear Algebra + Stats)",
+        priority: "CRITICAL",
+        why: "Interviews ask this. Geospatial ML relies on linear algebra.",
+        learn: ["Vectors, matrices, dot product", "Eigenvalues, decomposition", "Probability, distributions", "Hypothesis testing basics"],
+        time: "6 weeks",
+        outcome: "Can explain covariance, correlation, matrix operations in interviews"
+      },
+      {
+        week: "W15-16",
+        topic: "Project 1: Kaggle or Personal Data",
+        priority: "CRITICAL",
+        why: "First portfolio piece. Proof you can code end-to-end.",
+        learn: ["Data cleaning", "EDA", "Git workflow", "Documentation"],
+        time: "2 weeks (ongoing from W13)",
+        outcome: "First GitHub project: polished, documented, real data"
+      }
+    ],
+    outcomes: [
+      "✅ Solid Python foundation (NumPy, Pandas)",
+      "✅ Git/GitHub second nature",
+      "✅ First portfolio project live",
+      "✅ Math fundamentals for ML",
+      "✅ Ready for classical ML"
+    ]
+  },
+
+  {
+    phase: "SEMESTER 4 (Weeks 17-32)",
+    icon: "📊",
+    color: "#7B61FF",
+    duration: "4 months",
+    goal: "Classical ML + Geospatial Basics",
+    topics: [
+      {
+        week: "W17-20",
+        topic: "Scikit-learn (Classical ML)",
+        priority: "CRITICAL",
+        why: "Indian space companies use Random Forest/SVM more than deep learning.",
+        learn: ["Regression models", "Classification models", "Tree-based methods", "Model evaluation", "Cross-validation"],
+        time: "4 weeks",
+        outcome: "Can build and evaluate ML pipelines"
+      },
+      {
+        week: "W21-24",
+        topic: "Geospatial Python Introduction",
+        priority: "CRITICAL",
+        why: "Start early. Rasterio/GeoPandas are your satellite data tools.",
+        learn: ["Rasterio basics", "GeoPandas introduction", "Loading GeoTIFF files", "CRS/projections", "Simple spatial operations"],
+        time: "4 weeks",
+        outcome: "Can load and manipulate satellite data in Python"
+      },
+      {
+        week: "W25-28",
+        topic: "QGIS Basics (GIS Tool)",
+        priority: "SHOULD-KNOW",
+        why: "Industry standard. Visual understanding of spatial data. 2 weeks max.",
+        learn: ["Interface basics", "Loading raster/vector", "Basic visualization", "Layer properties"],
+        time: "2 weeks",
+        outcome: "Can visualize satellite data in QGIS, understand CRS"
+      },
+      {
+        week: "W29-32",
+        topic: "Project 2: Satellite Data Analysis",
+        priority: "CRITICAL",
+        why: "Second portfolio piece. MUST involve real satellite data.",
+        learn: ["Sentinel-2 or Landsat data download", "NDVI calculation", "Time-series analysis", "Visualization"],
+        time: "4 weeks (ongoing from W25)",
+        outcome: "Project 2: Satellite data analysis with Python (GitHub)"
+      }
+    ],
+    outcomes: [
+      "✅ Scikit-learn proficiency",
+      "✅ Rasterio/GeoPandas working knowledge",
+      "✅ QGIS basics (visual tool)",
+      "✅ 2nd portfolio project: satellite-focused",
+      "✅ Can talk about NDVI, satellite bands in interviews"
+    ]
+  },
+
+  {
+    phase: "SEMESTER 5 (Weeks 33-48)",
+    icon: "🛰️",
+    color: "#F472B6",
+    duration: "4 months",
+    goal: "Deep Geospatial + Start Internship Applications",
+    topics: [
+      {
+        week: "W33-38",
+        topic: "Deep Geospatial Python",
+        priority: "CRITICAL",
+        why: "Specialized skill. This is where you separate from generic ML engineers.",
+        learn: ["Advanced Rasterio", "Advanced GeoPandas", "Time-series stacking", "Reprojection & resampling", "Multi-spectral band operations"],
+        time: "6 weeks",
+        outcome: "Expert-level geospatial data manipulation"
+      },
+      {
+        week: "W39-42",
+        topic: "Deep Learning Intro (Optional but Recommended)",
+        priority: "OPTIONAL",
+        why: "Not required for entry-level, but helps for Pixxel/advanced roles.",
+        learn: ["PyTorch basics", "CNNs for images", "Transfer learning concept", "U-Net for segmentation"],
+        time: "4 weeks (can be done in parallel)",
+        outcome: "Understand deep learning for satellite imagery"
+      },
+      {
+        week: "W43-46",
+        topic: "Project 3: Land Cover Classification or Change Detection",
+        priority: "CRITICAL",
+        why: "Geo-specialized project. This is what companies want to see.",
+        learn: ["Real satellite problem", "ML pipeline for geospatial", "Accuracy metrics", "GitHub documentation"],
+        time: "4 weeks (ongoing from W39)",
+        outcome: "Project 3: Industry-level geospatial ML project"
+      },
+      {
+        week: "W44-48",
+        topic: "🔥 INTERNSHIP APPLICATIONS START",
+        priority: "CRITICAL",
+        why: "Timing: Applications now, interviews in W48-50.",
+        learn: ["LinkedIn optimization", "Cold emails to Pixxel/GalaxEye", "ISRO IIRS application (Oct-Nov)", "Interview prep"],
+        time: "Ongoing",
+        outcome: "✅ Applications submitted to 10+ companies"
+      }
+    ],
+    outcomes: [
+      "✅ Geospatial ML expert (can solve real satellite problems)",
+      "✅ 3 polished portfolio projects on GitHub",
+      "✅ Interview-ready for ISRO, Pixxel, others",
+      "✅ Applied to 10+ companies with strong projects",
+      "✅ In final rounds of interviews"
+    ]
+  },
+
+  {
+    phase: "SEMESTER 6 (Weeks 49-64)",
+    icon: "🎯",
+    color: "#10B981",
+    duration: "4 months",
+    goal: "Internship + Final Preparation",
+    topics: [
+      {
+        week: "W49-52",
+        topic: "Interview Rounds (If selected)",
+        priority: "CRITICAL",
+        why: "Final push. Technical + domain interviews.",
+        learn: ["System design for satellite ML", "Coding problems (LeetCode hard)", "Domain Q&A", "Behavioral"],
+        time: "2-4 weeks",
+        outcome: "✅ Internship offer(s) in hand"
+      },
+      {
+        week: "W53-64",
+        topic: "Internship (If Secured)",
+        priority: "CRITICAL",
+        why: "Real work. This is your proof of competency.",
+        learn: ["Real satellite ML problems", "Production code", "Team dynamics", "Domain depth"],
+        time: "12 weeks",
+        outcome: "✅ Internship experience + job offer (goal)"
+      },
+      {
+        week: "W53-64 (Backup Plan)",
+        topic: "Continued Learning + Open Source",
+        priority: "IMPORTANT",
+        why: "If no internship yet, build more, contribute to open source.",
+        learn: ["Advanced topics (based on interest)", "Contribute to Rasterio/GeoPandas", "Publish findings/blog"],
+        time: "Ongoing",
+        outcome: "Keep momentum, get noticed by companies"
+      }
+    ],
+    outcomes: [
+      "✅ Internship secured (ISRO/Pixxel/similar)",
+      "✅ OR strong enough for direct job offers",
+      "✅ Portfolio demonstrates industry-ready skills",
+      "✅ Network built with space tech professionals"
+    ]
+  }
+];
+
+const tools = [
+  { name: "Git/GitHub", priority: "🔴 MUST-KNOW", when: "W1-2 (Sem 3)", depth: "Intermediate", impact: "Critical for visibility" },
+  { name: "NumPy", priority: "🔴 MUST-KNOW", when: "W3-6 (Sem 3)", depth: "Expert", impact: "Foundation for all data work" },
+  { name: "Pandas", priority: "🔴 MUST-KNOW", when: "W3-6 (Sem 3)", depth: "Expert", impact: "Satellite metadata + tabular data" },
+  { name: "Matplotlib/Seaborn", priority: "🟡 SHOULD-KNOW", when: "W7-8 (Sem 3)", depth: "Intermediate", impact: "Communication" },
+  { name: "Scikit-learn", priority: "🔴 MUST-KNOW", when: "W17-20 (Sem 4)", depth: "Expert", impact: "Classical ML (most used)" },
+  { name: "Rasterio", priority: "🔴 MUST-KNOW", when: "W21-24 (Sem 4)", depth: "Expert", impact: "Load satellite images" },
+  { name: "GeoPandas", priority: "🔴 MUST-KNOW", when: "W21-24 (Sem 4)", depth: "Expert", impact: "Spatial operations" },
+  { name: "QGIS", priority: "🟡 SHOULD-KNOW", when: "W25-28 (Sem 4)", depth: "Beginner", impact: "Visual understanding (2 weeks)" },
+  { name: "PyTorch", priority: "🟢 NICE-TO-HAVE", when: "W39-42 (Sem 5)", depth: "Intermediate", impact: "Deep learning (optional)" },
+  { name: "Docker", priority: "🟢 NICE-TO-HAVE", when: "After internship", depth: "Beginner", impact: "Deployment (learn on job)" },
+  { name: "Cloud (AWS/GCP)", priority: "🟢 NICE-TO-HAVE", when: "After internship", depth: "Beginner", impact: "Scaling (30% of roles)" },
+  { name: "LaTeX", priority: "🟢 NICE-TO-HAVE", when: "Sem 5+ (optional)", depth: "Basic", impact: "Research papers (bonus)" }
+];
+
+const quickWins = [
+  { skill: "Git/GitHub Setup", effort: "1 week", impact: "80%", why: "Recruiters filter by GitHub first" },
+  { skill: "First Kaggle Project", effort: "3 weeks", impact: "70%", why: "Proof of capability, portfolio ready" },
+  { skill: "QGIS Basics", effort: "2 weeks", impact: "40%", why: "Visual tool, easy to learn, impresses non-coders" },
+  { skill: "Sentinel-2 NDVI", effort: "2 weeks", impact: "60%", why: "Industry-standard metric, quick win" },
+  { skill: "GitHub + LinkedIn Optimization", effort: "3 days", impact: "50%", why: "Visibility to recruiters" }
+];
+
+export default function FinalRoadmap() {
+  const [expandedPhase, setExpandedPhase] = useState(0);
+  const [expandedTopic, setExpandedTopic] = useState({});
+
+  const toggleTopic = (phaseIdx, topicIdx) => {
+    const key = `${phaseIdx}-${topicIdx}`;
+    setExpandedTopic(prev => ({ ...prev, [key]: !prev[key] }));
+  };
+
+  return (
+    <div style={{
+      background: "linear-gradient(135deg, #0F1929 0%, #1A2847 50%, #0F1929 100%)",
+      minHeight: "100vh",
+      fontFamily: "'SF Pro Display', system-ui, sans-serif",
+      padding: "40px 20px",
+      color: "#E2E8F0",
+    }}>
+      <div style={{ maxWidth: "1000px", margin: "0 auto" }}>
+        {/* Header */}
+        <div style={{ textAlign: "center", marginBottom: "50px" }}>
+          <div style={{ fontSize: "12px", letterSpacing: "3px", color: "#4F9CF9", marginBottom: "12px", textTransform: "uppercase", fontWeight: "700" }}>
+            Expert-Validated Roadmap
+          </div>
+          <h1 style={{
+            fontSize: "clamp(28px, 6vw, 44px)",
+            fontWeight: "800",
+            margin: "0 0 12px",
+            background: "linear-gradient(90deg, #4F9CF9, #7B61FF, #F472B6)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+          }}>
+            Space ML Engineer — 18-Month Path to Internship
+          </h1>
+          <p style={{ color: "#94A3B8", fontSize: "14px", margin: "0", maxWidth: "700px", marginLeft: "auto", marginRight: "auto" }}>
+            Based on real expert experiences from ISRO, Pixxel, GalaxEye employees + Gemini research. Semester 3 → Semester 6. Optimized for internship acquisition.
+          </p>
+        </div>
+
+        {/* Main Phases */}
+        <div style={{ marginBottom: "60px" }}>
+          {roadmap.map((phase, phaseIdx) => (
+            <div key={phaseIdx} style={{
+              background: "rgba(15, 25, 40, 0.7)",
+              border: `2px solid ${phase.color}30`,
+              borderLeft: `5px solid ${phase.color}`,
+              borderRadius: "12px",
+              marginBottom: "24px",
+              overflow: "hidden",
+              cursor: "pointer"
+            }}
+            onClick={() => setExpandedPhase(expandedPhase === phaseIdx ? -1 : phaseIdx)}
+            >
+              {/* Phase Header */}
+              <div style={{
+                padding: "24px",
+                background: expandedPhase === phaseIdx ? phase.color + "15" : "transparent",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center"
+              }}>
+                <div style={{ display: "flex", gap: "16px", alignItems: "center" }}>
+                  <div style={{ fontSize: "32px" }}>{phase.icon}</div>
+                  <div>
+                    <div style={{ fontSize: "12px", color: phase.color, letterSpacing: "1px", fontWeight: "700", marginBottom: "4px" }}>
+                      {phase.phase}
+                    </div>
+                    <div style={{ fontSize: "16px", fontWeight: "700", color: "#F1F5F9", marginBottom: "4px" }}>
+                      {phase.goal}
+                    </div>
+                    <div style={{ fontSize: "12px", color: "#94A3B8" }}>
+                      ⏱️ {phase.duration}
+                    </div>
+                  </div>
+                </div>
+                <div style={{ fontSize: "20px", color: "#64748B" }}>
+                  {expandedPhase === phaseIdx ? "▲" : "▼"}
+                </div>
+              </div>
+
+              {/* Expanded Topics */}
+              {expandedPhase === phaseIdx && (
+                <div style={{ padding: "20px", borderTop: `1px solid ${phase.color}30` }}>
+                  {phase.topics.map((topic, topicIdx) => {
+                    const key = `${phaseIdx}-${topicIdx}`;
+                    const isOpen = expandedTopic[key];
+
+                    return (
+                      <div key={topicIdx} style={{
+                        background: "rgba(0, 0, 0, 0.3)",
+                        border: "1px solid rgba(255,255,255,0.08)",
+                        borderRadius: "8px",
+                        marginBottom: "12px",
+                        overflow: "hidden"
+                      }}>
+                        <div
+                          onClick={(e) => { e.stopPropagation(); toggleTopic(phaseIdx, topicIdx); }}
+                          style={{
+                            padding: "14px 16px",
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                            cursor: "pointer",
+                            background: isOpen ? phase.color + "10" : "transparent"
+                          }}
+                        >
+                          <div>
+                            <div style={{ fontSize: "13px", color: phase.color, fontWeight: "700", marginBottom: "2px" }}>
+                              {topic.week} • {topic.priority}
+                            </div>
+                            <div style={{ fontSize: "14px", fontWeight: "600", color: "#F1F5F9" }}>
+                              {topic.topic}
+                            </div>
+                          </div>
+                          <div style={{ fontSize: "14px", color: "#64748B" }}>
+                            {isOpen ? "−" : "+"}
+                          </div>
+                        </div>
+
+                        {isOpen && (
+                          <div style={{ padding: "16px", background: "rgba(0,0,0,0.5)", fontSize: "13px", color: "#CBD5E1" }}>
+                            <div style={{ marginBottom: "12px" }}>
+                              <div style={{ fontSize: "11px", color: phase.color, fontWeight: "700", marginBottom: "4px" }}>WHY</div>
+                              <div>{topic.why}</div>
+                            </div>
+                            <div style={{ marginBottom: "12px" }}>
+                              <div style={{ fontSize: "11px", color: phase.color, fontWeight: "700", marginBottom: "4px" }}>LEARN</div>
+                              <div>{topic.learn.join(" • ")}</div>
+                            </div>
+                            <div style={{ marginBottom: "12px" }}>
+                              <div style={{ fontSize: "11px", color: phase.color, fontWeight: "700", marginBottom: "4px" }}>TIME</div>
+                              <div>{topic.time}</div>
+                            </div>
+                            <div style={{ background: phase.color + "20", padding: "8px 10px", borderRadius: "4px", borderLeft: `2px solid ${phase.color}` }}>
+                              <div style={{ fontSize: "11px", color: phase.color, fontWeight: "700", marginBottom: "2px" }}>OUTCOME</div>
+                              <div>{topic.outcome}</div>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+
+                  {/* Phase Outcomes */}
+                  <div style={{ marginTop: "20px", padding: "14px", background: phase.color + "15", borderRadius: "8px", borderLeft: `3px solid ${phase.color}` }}>
+                    <div style={{ fontSize: "12px", color: phase.color, fontWeight: "700", marginBottom: "8px" }}>PHASE OUTCOMES</div>
+                    {phase.outcomes.map((outcome, idx) => (
+                      <div key={idx} style={{ fontSize: "12px", color: "#CBD5E1", marginBottom: "4px" }}>
+                        {outcome}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+
+        {/* Tools Matrix */}
+        <div style={{
+          background: "rgba(15, 25, 40, 0.7)",
+          border: "1px solid rgba(255,255,255,0.1)",
+          borderRadius: "12px",
+          padding: "24px",
+          marginBottom: "40px"
+        }}>
+          <h2 style={{ fontSize: "18px", fontWeight: "700", marginBottom: "20px", color: "#F1F5F9" }}>
+            🛠️ Tools Ecosystem Timeline
+          </h2>
+          <div style={{ display: "grid", gap: "12px" }}>
+            {tools.map((tool, idx) => (
+              <div key={idx} style={{
+                display: "grid",
+                gridTemplateColumns: "150px 150px 120px 1fr",
+                gap: "16px",
+                padding: "12px",
+                background: "rgba(0,0,0,0.3)",
+                borderRadius: "6px",
+                fontSize: "12px",
+                alignItems: "center"
+              }}>
+                <div style={{ fontWeight: "600", color: "#F1F5F9" }}>{tool.name}</div>
+                <div style={{ color: tool.priority.includes("🔴") ? "#EF4444" : tool.priority.includes("🟡") ? "#F59E0B" : "#10B981" }}>
+                  {tool.priority}
+                </div>
+                <div style={{ color: "#94A3B8" }}>Sem {tool.when.includes("3") ? "3" : tool.when.includes("4") ? "4" : "5+"}</div>
+                <div style={{ color: "#CBD5E1" }}>{tool.impact}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Quick Wins */}
+        <div style={{
+          background: "rgba(15, 25, 40, 0.7)",
+          border: "1px solid rgba(255,255,255,0.1)",
+          borderRadius: "12px",
+          padding: "24px"
+        }}>
+          <h2 style={{ fontSize: "18px", fontWeight: "700", marginBottom: "20px", color: "#F1F5F9" }}>
+            ⚡ Quick Wins (High Impact, Low Time)
+          </h2>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "16px" }}>
+            {quickWins.map((win, idx) => (
+              <div key={idx} style={{
+                background: "rgba(79, 156, 249, 0.1)",
+                border: "1px solid rgba(79, 156, 249, 0.3)",
+                borderRadius: "8px",
+                padding: "16px"
+              }}>
+                <div style={{ fontSize: "14px", fontWeight: "700", color: "#4F9CF9", marginBottom: "8px" }}>
+                  {win.skill}
+                </div>
+                <div style={{ fontSize: "12px", color: "#CBD5E1", marginBottom: "8px" }}>
+                  ⏱️ {win.effort} | 📈 Impact: {win.impact}
+                </div>
+                <div style={{ fontSize: "12px", color: "#94A3B8" }}>
+                  💡 {win.why}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div style={{ textAlign: "center", marginTop: "40px", color: "#475569", fontSize: "12px" }}>
+          <div>✅ Expert-validated roadmap based on Gemini research + real ISRO/Pixxel/GalaxEye employee experiences</div>
+          <div style={{ marginTop: "8px", color: "#334155", fontSize: "11px" }}>
+            Timeline: 18 months (Sem 3 → Sem 6) | Goal: Internship + Job Offer by end of B.Tech
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
