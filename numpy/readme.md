@@ -26,3 +26,4 @@
 | `.reshape()` | Modifies the structural shape of the array explicitly. | `arr.reshape(3, 4)` |
 | `.sum()`, `.mean()` | Computes numeric sums or averages. | `arr.mean()` |
 | `.dot()`, `@` | Computes the dot product or performs matrix multiplication. | `A @ B` |
+##Note : I have made the readme using AI because i wanted a clean table for my repo so i can revise whenever i visited it. I am side by side learning to writ egood Readme files also
