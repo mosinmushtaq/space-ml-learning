@@ -18,9 +18,11 @@ axes[0].set_title("Temperature Trend")
 
 axes[1].scatter(NDVI, Cloud)
 axes[1].set_title("NDVI vs Cloud Cover")
-
+#      here axes[0].set_title not axes[0].plt.set_title
 axes[2].hist(Temperature, bins=3)
 axes[2].set_title("Temperature Distribution")
+
+# we can add indivsual lables tp each graph by axes[0].set_xlabel but the overall graph gets too cluttered
 
 
 plt.savefig("06_mixed_subplots.png")
