@@ -8,6 +8,6 @@ I have finished the basics of all these 3 libraries - numpy, pandas and matplotl
 
 These have gave a another look about how data is processed and visualised in code. Until now i only knew basic python if-else but this have made my interest in code more big.  
 
-##My Next Steps wil be
+## My Next Steps wil be
 
 - **After Matplotlib:** Math for ML - Linear Algebra, Statistics, Calculus alongwith more deeper understsanding of these tools.
