@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 
-fig, axes=plt.subplots(1,3)
+fig, axes=plt.subplots(1,3) 
 
 Days=[1,2,3,4,5,6,7]
 Temperature=[22, 24, 19, 25, 23, 26, 20]
