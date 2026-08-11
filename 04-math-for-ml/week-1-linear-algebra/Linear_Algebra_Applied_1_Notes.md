@@ -1,4 +1,4 @@
-Linear Algebra Applied 1: Introduction to Linear Regression
+Linear Algebra Applied 1
 
 Instructor: Luis Serrano (DeepLearning.AI)
 
