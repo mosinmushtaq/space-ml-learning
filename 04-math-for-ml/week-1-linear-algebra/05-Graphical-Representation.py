@@ -14,7 +14,7 @@ matrix=np.hstack((matrixeq, reshaped))
 
 result=np.linalg.solve(matrixeq,matrixcont)
 
-def plot_lines(matrixeq,matrix,result):
+def plot_lines(matrix,result):
     a_coef_1=matrix[0,0]
     a_coef_2=matrix[1,0]
 
