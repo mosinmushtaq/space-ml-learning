@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: var(--text-primary); }
+.container { max-width: 100%; padding: 1.5rem; }
+.header { margin-bottom: 2rem; }
+.header h1 { font-size: 24px; font-weight: 600; margin-bottom: 0.5rem; }
+.header p { color: var(--text-secondary); font-size: 14px; }
+.nav { display: flex; gap: 8px; margin-bottom: 2rem; flex-wrap: wrap; }
+.nav button { padding: 8px 16px; border: 1px solid var(--border); border-radius: 6px; background: var(--surface-2); cursor: pointer; font-size: 13px; font-weight: 500; transition: all 0.2s; }
+.nav button.active { background: var(--text-primary); color: var(--surface-2); border-color: var(--text-primary); }
+.nav button:hover { border-color: var(--text-primary); }
+.section { display: none; }
+.section.active { display: block; animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.content { background: var(--surface-1); border-radius: 8px; border: 1px solid var(--border); padding: 1.5rem; margin-bottom: 1.5rem; }
+.content h2 { font-size: 18px; font-weight: 600; margin-bottom: 1rem; }
+.content h3 { font-size: 15px; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.75rem; color: var(--text-primary); }
+.content p { font-size: 14px; line-height: 1.6; margin-bottom: 1rem; color: var(--text-secondary); }
+.matrix-demo { background: var(--surface-2); padding: 1rem; border-radius: 6px; border: 1px solid var(--border); margin: 1rem 0; font-family: 'Courier New', monospace; font-size: 12px; }
+.matrix-row { display: flex; gap: 8px; margin: 4px 0; }
+.matrix-cell { width: 40px; padding: 4px; text-align: center; background: var(--surface-1); border-radius: 3px; border: 0.5px solid var(--border); }
+.matrix-cell.pivot { background: #e8f0ff; color: #1e5aa8; font-weight: 600; }
+.steps { margin: 1.5rem 0; }
+.step { background: var(--surface-2); padding: 1rem; border-radius: 6px; margin-bottom: 0.75rem; border-left: 3px solid var(--border-strong); }
+.step-num { font-weight: 600; color: var(--text-primary); margin-bottom: 0.25rem; }
+.step-content { font-size: 13px; color: var(--text-secondary); }
+.control-group { margin: 1.5rem 0; display: flex; flex-direction: column; gap: 1rem; }
+.control-row { display: flex; gap: 12px; align-items: center; }
+label { font-size: 13px; font-weight: 500; color: var(--text-primary); min-width: 80px; }
+input[type="number"] { padding: 6px 8px; border: 1px solid var(--border); border-radius: 4px; font-size: 13px; }
+button { padding: 8px 16px; background: var(--text-primary); color: var(--surface-2); border: none; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: 500; transition: 0.2s; }
+button:hover { opacity: 0.8; }
+.result-box { background: #e8f5e9; border: 1px solid #4caf50; border-radius: 6px; padding: 1rem; margin-top: 1rem; color: #2e7d32; }
+.error-box { background: #ffebee; border: 1px solid #f44336; border-radius: 6px; padding: 1rem; margin-top: 1rem; color: #c62828; }
+.ml-app { background: var(--surface-2); padding: 1rem; border-radius: 6px; margin: 1rem 0; border: 1px solid var(--border); }
+.ml-app-title { font-weight: 600; color: var(--text-primary); margin-bottom: 0.75rem; }
+.ml-example { font-size: 12px; background: var(--surface-1); padding: 0.75rem; border-radius: 4px; margin-top: 0.5rem; border-left: 2px solid #1e5aa8; }
+.table-compact { width: 100%; font-size: 12px; border-collapse: collapse; margin: 1rem 0; }
+.table-compact th, .table-compact td { padding: 0.5rem; text-align: left; border-bottom: 1px solid var(--border); }
+.table-compact th { background: var(--surface-2); font-weight: 600; color: var(--text-primary); }
+.badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; margin: 0 4px 0 0; }
+.badge.success { background: #e8f5e9; color: #2e7d32; }
+.badge.danger { background: #ffebee; color: #c62828; }
+.badge.warning { background: #fff3e0; color: #e65100; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>Week 2: Gaussian Elimination & Linear Systems</h1>
+    <p>Interactive guide to solving systems of equations, row reduction, and rank</p>
+  </div>
+
+  <div class="nav">
+    <button class="nav-btn active" data-section="foundations">Foundations</button>
+    <button class="nav-btn" data-section="row-ops">Row Operations</button>
+    <button class="nav-btn" data-section="ref">REF & Pivots</button>
+    <button class="nav-btn" data-section="rank">Rank</button>
+    <button class="nav-btn" data-section="rref">RREF</button>
+    <button class="nav-btn" data-section="gaussian">Complete Algorithm</button>
+    <button class="nav-btn" data-section="ml">ML Debugging</button>
+  </div>
+
+  <div id="foundations" class="section active">
+    <div class="content">
+      <h2>What is a System of Linear Equations?</h2>
+      <p>A set of equations where we need to find values that satisfy all equations simultaneously.</p>
+      
+      <div class="matrix-demo">
+        2a + 3b = 8<br>
+        a + b = 4
+      </div>
+
+      <h3>Solution Types</h3>
+      <table class="table-compact">
+        <tr>
+          <th>Type</th>
+          <th>Equations</th>
+          <th>Why</th>
+        </tr>
+        <tr>
+          <td><span class="badge success">Unique</span></td>
+          <td>Non-singular (det ≠ 0)</td>
+          <td>All equations independent → one point of intersection</td>
+        </tr>
+        <tr>
+          <td><span class="badge warning">Infinite</span></td>
+          <td>Singular, redundant</td>
+          <td>Some equations are duplicates → entire line/plane of solutions</td>
+        </tr>
+        <tr>
+          <td><span class="badge danger">None</span></td>
+          <td>Singular, contradictory</td>
+          <td>Equations contradict (e.g., 0 = 1) → impossible</td>
+        </tr>
+      </table>
+
+      <h3>Example: Unique Solution</h3>
+      <p><strong>System:</strong> a + b = 10, a + 2b = 12</p>
+      <p><strong>Solution:</strong> a = 8, b = 2 ✓</p>
+      <p>Both equations are satisfied simultaneously.</p>
+    </div>
+  </div>
+
+  <div id="row-ops" class="section">
+    <div class="content">
+      <h2>Three Row Operations</h2>
+      <p>These operations preserve the solution set:</p>
+      
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1. Swap rows</div>
+          <div class="step-content">Reorder equations (order doesn't matter)</div>
+        </div>
+        <div class="step">
+          <div class="step-num">2. Multiply row by non-zero scalar</div>
+          <div class="step-content">Scale an equation (R1 ÷ 2, R2 × 3, etc.)</div>
+        </div>
+        <div class="step">
+          <div class="step-num">3. Add/subtract multiple of one row to another</div>
+          <div class="step-content">Combine equations to eliminate variables (R2 - 2×R1)</div>
+        </div>
+      </div>
+
+      <h3>Critical Rule</h3>
+      <p style="background: #fff3e0; padding: 1rem; border-radius: 4px; border-left: 3px solid #e65100; margin: 1rem 0;">
+        <strong>Apply operations to the ENTIRE row including constants.</strong> If you forget the constants column, you lose information and can't solve the system.
+      </p>
+
+      <h3>Example: Eliminate a variable</h3>
+      <div class="matrix-demo">
+        Original:<br>
+        5a + b = 17<br>
+        4a - 3b = 6<br><br>
+        R1 ÷ 5:<br>
+        a + 0.2b = 3.4<br>
+        4a - 3b = 6<br><br>
+        R2 - 4×R1:<br>
+        a + 0.2b = 3.4<br>
+        0a - 3.2b = -6.4 → b = 2
+      </div>
+    </div>
+  </div>
+
+  <div id="ref" class="section">
+    <div class="content">
+      <h2>Row Echelon Form (REF)</h2>
+      <p>A matrix structure where you can easily read the solution (after back-substitution).</p>
+
+      <h3>Three Rules</h3>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1. Zero rows at bottom</div>
+          <div class="step-content">All rows with only zeros come after all non-zero rows</div>
+        </div>
+        <div class="step">
+          <div class="step-num">2. Each row has a pivot</div>
+          <div class="step-content">Leftmost non-zero entry in each non-zero row</div>
+        </div>
+        <div class="step">
+          <div class="step-num">3. Staircase pattern</div>
+          <div class="step-content">Each pivot is strictly to the right of all pivots above it</div>
+        </div>
+      </div>
+
+      <h3>Critical: Diagonal Rule</h3>
+      <p style="background: #e8f5e9; padding: 1rem; border-radius: 4px; border-left: 3px solid #4caf50; margin: 1rem 0;">
+        <strong>Reading the diagonal left-to-right:</strong> Once you hit a ZERO on the diagonal, all diagonal entries to its right must also be ZERO.
+      </p>
+
+      <h3>Example: Valid REF</h3>
+      <div class="matrix-demo">
+        <div class="matrix-row">
+          <div class="matrix-cell pivot">1</div>
+          <div class="matrix-cell">1.5</div>
+          <div class="matrix-cell">0.5</div>
+        </div>
+        <div class="matrix-row">
+          <div class="matrix-cell">0</div>
+          <div class="matrix-cell pivot">1</div>
+          <div class="matrix-cell">2</div>
+        </div>
+        <div class="matrix-row">
+          <div class="matrix-cell">0</div>
+          <div class="matrix-cell">0</div>
+          <div class="matrix-cell pivot">1</div>
+        </div>
+      </div>
+      <p style="font-size: 12px; margin-top: 0.5rem;">✓ Diagonal: [1, 1, 1] — all non-zero (staircase complete)</p>
+
+      <h3>Example: INVALID REF (Your Mistake)</h3>
+      <div class="matrix-demo">
+        <div class="matrix-row">
+          <div class="matrix-cell pivot">1</div>
+          <div class="matrix-cell">-1/2</div>
+          <div class="matrix-cell">1/2</div>
+        </div>
+        <div class="matrix-row">
+          <div class="matrix-cell">0</div>
+          <div class="matrix-cell pivot">1</div>
+          <div class="matrix-cell">3</div>
+        </div>
+        <div class="matrix-row">
+          <div class="matrix-cell">0</div>
+          <div class="matrix-cell">0</div>
+          <div class="matrix-cell pivot">2</div>
+        </div>
+      </div>
+      <p style="font-size: 12px; margin-top: 0.5rem; color: #c62828;">✗ Diagonal: [1, 1, 2] — non-zero after zero? NO. This violates the rule. You needed R3 - 2×R2 to get [0, 0, -4].</p>
+    </div>
+  </div>
+
+  <div id="rank" class="section">
+    <div class="content">
+      <h2>Rank of a Matrix</h2>
+      <p><strong>Rank = Number of pivots = Number of non-zero rows in REF</strong></p>
+
+      <h3>Rank and Solution Type</h3>
+      <table class="table-compact">
+        <tr>
+          <th>Rank</th>
+          <th>Variables (n)</th>
+          <th>Outcome</th>
+        </tr>
+        <tr>
+          <td>Rank = n</td>
+          <td>3 vars, rank 3</td>
+          <td><span class="badge success">Unique solution</span></td>
+        </tr>
+        <tr>
+          <td>Rank < n</td>
+          <td>3 vars, rank 2</td>
+          <td><span class="badge warning">Infinite solutions</span> (1 free variable)</td>
+        </tr>
+        <tr>
+          <td>Rank < n + constants contradict</td>
+          <td>3 vars, rank 2, 0=1 row</td>
+          <td><span class="badge danger">No solution</span></td>
+        </tr>
+      </table>
+
+      <h3>Example: Rank from REF</h3>
+      <div class="matrix-demo">
+        <div class="matrix-row">
+          <div class="matrix-cell pivot">1</div>
+          <div class="matrix-cell">2</div>
+          <div class="matrix-cell">3</div>
+        </div>
+        <div class="matrix-row">
+          <div class="matrix-cell">0</div>
+          <div class="matrix-cell pivot">1</div>
+          <div class="matrix-cell">4</div>
+        </div>
+        <div class="matrix-row">
+          <div class="matrix-cell">0</div>
+          <div class="matrix-cell">0</div>
+          <div class="matrix-cell">0</div>
+        </div>
+      </div>
+      <p style="font-size: 12px; margin-top: 0.5rem;">Pivots: 1 (row 0), 1 (row 1) → <strong>Rank = 2</strong></p>
+
+      <h3>Singular vs. Non-Singular</h3>
+      <table class="table-compact">
+        <tr><th>Non-Singular</th><th>Singular</th></tr>
+        <tr><td>Rank = n</td><td>Rank < n</td></tr>
+        <tr><td>det ≠ 0</td><td>det = 0</td></tr>
+        <tr><td>Unique solution</td><td>Infinite or none</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div id="rref" class="section">
+    <div class="content">
+      <h2>Reduced Row Echelon Form (RREF)</h2>
+      <p><strong>RREF = REF + two conditions: pivots = 1, zeros above pivots</strong></p>
+
+      <h3>Why RREF Matters</h3>
+      <p><strong>REF:</strong> Multiple valid REFs, still needs back-substitution</p>
+      <p><strong>RREF:</strong> Exactly one per matrix, solution reads directly</p>
+
+      <h3>Algorithm: REF → RREF</h3>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">Phase 1: Make all pivots = 1</div>
+          <div class="step-content">Divide each non-zero row by its pivot value</div>
+        </div>
+        <div class="step">
+          <div class="step-num">Phase 2: Eliminate above pivots (bottom to top)</div>
+          <div class="step-content">For each pivot, make all entries above it = 0</div>
+        </div>
+      </div>
+
+      <h3>Example: 2×2 REF to RREF</h3>
+      <p><strong>Starting REF:</strong></p>
+      <div class="matrix-demo">
+        <div class="matrix-row">
+          <div class="matrix-cell pivot">2</div>
+          <div class="matrix-cell">3</div>
+          <div class="matrix-cell">7</div>
+        </div>
+        <div class="matrix-row">
+          <div class="matrix-cell">0</div>
+          <div class="matrix-cell pivot">-5</div>
+          <div class="matrix-cell">10</div>
+        </div>
+      </div>
+
+      <p style="margin-top: 1rem;"><strong>Phase 1: Make pivots = 1</strong></p>
+      <div class="matrix-demo">
+        R1 ÷ 2, R2 ÷ (-5):<br>
+        <div class="matrix-row">
+          <div class="matrix-cell pivot">1</div>
+          <div class="matrix-cell">1.5</div>
+          <div class="matrix-cell">3.5</div>
+        </div>
+        <div class="matrix-row">
+          <div class="matrix-cell">0</div>
+          <div class="matrix-cell pivot">1</div>
+          <div class="matrix-cell">-2</div>
+        </div>
+      </div>
+
+      <p style="margin-top: 1rem;"><strong>Phase 2: Eliminate above (bottom to top)</strong></p>
+      <div class="matrix-demo">
+        R1 - 1.5×R2:<br>
+        <div class="matrix-row">
+          <div class="matrix-cell pivot">1</div>
+          <div class="matrix-cell">0</div>
+          <div class="matrix-cell">6</div>
+        </div>
+        <div class="matrix-row">
+          <div class="matrix-cell">0</div>
+          <div class="matrix-cell pivot">1</div>
+          <div class="matrix-cell">-2</div>
+        </div>
+      </div>
+
+      <p style="font-size: 12px; margin-top: 1rem;"><strong>RREF achieved!</strong> Read directly: x = 6, y = -2</p>
+    </div>
+  </div>
+
+  <div id="gaussian" class="section">
+    <div class="content">
+      <h2>Complete Gaussian Elimination Pipeline</h2>
+      <p>Full algorithm: Augmented Matrix → REF (Forward) → RREF (Back-Substitution) → Solution</p>
+
+      <div class="control-group">
+        <h3>Interactive Solver (2×2 System)</h3>
+        <div class="control-row">
+          <label>a₁:</label>
+          <input type="number" id="coeff-a1" value="3" step="0.1">
+          <span>a +</span>
+          <label>b₁:</label>
+          <input type="number" id="coeff-b1" value="2" step="0.1">
+          <span>b =</span>
+          <label>c₁:</label>
+          <input type="number" id="const-c1" value="8" step="0.1">
+        </div>
+        <div class="control-row">
+          <label>a₂:</label>
+          <input type="number" id="coeff-a2" value="1" step="0.1">
+          <span>a +</span>
+          <label>b₂:</label>
+          <input type="number" id="coeff-b2" value="1" step="0.1">
+          <span>b =</span>
+          <label>c₂:</label>
+          <input type="number" id="const-c2" value="4" step="0.1">
+        </div>
+        <button onclick="solveTwoByTwo()">Solve</button>
+        <div id="solver-output"></div>
+      </div>
+
+      <h3>Step-by-Step Pipeline</h3>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">Step 1: Build Augmented Matrix</div>
+          <div class="step-content">Combine coefficients + constants</div>
+        </div>
+        <div class="step">
+          <div class="step-num">Step 2: Forward Elimination → REF</div>
+          <div class="step-content">For each pivot: make = 1, zero below</div>
+        </div>
+        <div class="step">
+          <div class="step-num">Step 3: Back Substitution → RREF</div>
+          <div class="step-content">For each pivot (bottom-to-top): zero above</div>
+        </div>
+        <div class="step">
+          <div class="step-num">Step 4: Extract Solution</div>
+          <div class="step-content">Read constants column from identity matrix</div>
+        </div>
+      </div>
+
+      <h3>Handling Singular Systems</h3>
+      <p>When you reach a row of ALL zeros in coefficients:</p>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">Row: [0, 0, ..., 0 | 0]</div>
+          <div class="step-content"><span class="badge warning">Infinite solutions</span> — equation 0=0 is always true</div>
+        </div>
+        <div class="step">
+          <div class="step-num">Row: [0, 0, ..., 0 | k] (k ≠ 0)</div>
+          <div class="step-content"><span class="badge danger">No solution</span> — equation 0=k is impossible</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="ml" class="section">
+    <div class="content">
+      <h2>ML Applications & Debugging</h2>
+      <p>You won't hand-solve systems in ML, but Gaussian Elimination powers every regression model internally.</p>
+
+      <h3>1. Linear Regression: Normal Equations</h3>
+      <div class="ml-app">
+        <div class="ml-app-title">Problem: Find weights β</div>
+        <div class="ml-example">
+          <strong>Normal equation:</strong> (X^T X)β = X^T y<br>
+          <strong>Internally:</strong> np.linalg.solve() uses Gaussian Elimination
+        </div>
+      </div>
+
+      <h3>2. Multicollinearity Detection</h3>
+      <div class="ml-app">
+        <div class="ml-app-title">❌ Error: Singular matrix</div>
+        <div class="ml-example">
+          <strong>Cause:</strong> Features are linearly dependent (Feature 2 = 2 × Feature 1)<br>
+          <strong>Check rank:</strong> np.linalg.matrix_rank(X)<br>
+          <strong>Fix:</strong> Remove correlated features or use Ridge Regression
+        </div>
+      </div>
+
+      <h3>3. Matrix Invertibility</h3>
+      <div class="ml-app">
+        <div class="ml-app-title">❌ Error: np.linalg.inv() fails</div>
+        <div class="ml-example">
+          <strong>Cause:</strong> Matrix A is singular (det = 0)<br>
+          <strong>Why:</strong> Gaussian Elimination detects row of zeros = no inverse<br>
+          <strong>Fix:</strong> Use np.linalg.lstsq() for overdetermined systems
+        </div>
+      </div>
+
+      <h3>4. Ill-Conditioning (Numerical Instability)</h3>
+      <div class="ml-app">
+        <div class="ml-app-title">⚠ Warning: Tiny pivots → huge errors</div>
+        <div class="ml-example">
+          <strong>Cause:</strong> Matrix is nearly singular (close to losing independence)<br>
+          <strong>Check:</strong> cond_number = np.linalg.cond(A) (should be < 1e10)<br>
+          <strong>Fix:</strong> Regularization (Ridge), scale features, center data
+        </div>
+      </div>
+
+      <h3>5. Infinite Solutions Problem</h3>
+      <div class="ml-app">
+        <div class="ml-app-title">⚠ Warning: Multiple optimal weights</div>
+        <div class="ml-example">
+          <strong>Cause:</strong> Feature matrix is singular (rank < n_features)<br>
+          <strong>Consequence:</strong> Many weight vectors minimize loss equally<br>
+          <strong>Fix:</strong> Add regularization λI to make matrix non-singular
+        </div>
+      </div>
+
+      <h3>Quick Debugging Flowchart</h3>
+      <div style="background: var(--surface-2); padding: 1rem; border-radius: 6px; margin-top: 1rem; font-size: 12px; line-height: 1.8;">
+        <strong>❌ Singular matrix error?</strong><br>
+        ├─ Check rank: np.linalg.matrix_rank(X)<br>
+        │  → rank < n? Multicollinearity detected<br>
+        │  → Remove features or regularize<br>
+        ├─ Check det: np.linalg.det(A)<br>
+        │  → det ≈ 0? Matrix singular<br>
+        │  → Use lstsq() instead of solve()<br>
+        └─ Check condition number: np.linalg.cond(A)<br>
+           → > 1e10? Ill-conditioned<br>
+           → Use Ridge Regression
+      </div>
+
+      <h3>Key Takeaway</h3>
+      <p style="background: #e8f5e9; padding: 1rem; border-radius: 4px; border-left: 3px solid #4caf50; margin-top: 1rem;">
+        Understanding Gaussian Elimination tells you <strong>why</strong> your model breaks. A singular matrix error isn't random—it means your feature matrix lost independence, and you need to fix your data or algorithm, not just catch an exception.
+      </p>
+    </div>
+  </div>
+</div>
+
+<script>
+function solveTwoByTwo() {
+  const a1 = parseFloat(document.getElementById('coeff-a1').value);
+  const b1 = parseFloat(document.getElementById('coeff-b1').value);
+  const c1 = parseFloat(document.getElementById('const-c1').value);
+  const a2 = parseFloat(document.getElementById('coeff-a2').value);
+  const b2 = parseFloat(document.getElementById('coeff-b2').value);
+  const c2 = parseFloat(document.getElementById('const-c2').value);
+
+  const det = a1 * b2 - a2 * b1;
+  let output = '<div style="margin-top: 1rem;">';
+
+  if (Math.abs(det) < 1e-10) {
+    output += '<div class="error-box">Singular matrix (det ≈ 0). No unique solution.</div>';
+  } else {
+    const a = (c1 * b2 - c2 * b1) / det;
+    const b = (a1 * c2 - a2 * c1) / det;
+    output += '<div class="result-box">';
+    output += '<strong>Solution:</strong><br>';
+    output += 'a = ' + a.toFixed(3) + '<br>';
+    output += 'b = ' + b.toFixed(3) + '<br>';
+    output += '<strong>Verification:</strong><br>';
+    output += a1 + 'a + ' + b1 + 'b = ' + (a1*a + b1*b).toFixed(3) + ' (expect ' + c1 + ')<br>';
+    output += a2 + 'a + ' + b2 + 'b = ' + (a2*a + b2*b).toFixed(3) + ' (expect ' + c2 + ')';
+    output += '</div>';
+  }
+
+  output += '</div>';
+  document.getElementById('solver-output').innerHTML = output;
+}
+
+document.querySelectorAll('.nav-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    btn.classList.add('active');
+    const section = btn.dataset.section;
+    document.getElementById(section).classList.add('active');
+  });
+});
+</script>
+</body>
+</html>
